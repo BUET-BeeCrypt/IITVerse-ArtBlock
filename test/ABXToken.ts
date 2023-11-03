@@ -23,7 +23,7 @@ describe("ABXToken", () => {
   });
 
   it("should allow to buy tokens", async () => {
-    const { token, otherAccounts } = await loadFixture(deployOnceFixture);
+    const { token, owner, otherAccounts } = await loadFixture(deployOnceFixture);
     // log the blance of otherAccounts[0]
     const cost = 10; // 10 wei
     const blanceBefore = await otherAccounts[0].getBalance();
@@ -34,9 +34,16 @@ describe("ABXToken", () => {
       data: token.interface.encodeFunctionData("buyTokens", [5]) // Encode the function call
     }); */
 
+    console.log("total token: ", await token.totalSupply());
+
     const tx = await token.connect(otherAccounts[0]).buyTokens(5, {
       value: cost // Specify the amount of wei to send with the transaction(i.e msg.value)
     });
+
+    console.log("total token after buy: ", await token.totalSupply());
+    console.log("total token in ABXToken: ", await token.balanceOf(owner.address));
+    console.log("total token after buy: ", await token.balanceOf(otherAccounts[0].address));
+
 
 
     // log the blance of otherAccounts[0]
