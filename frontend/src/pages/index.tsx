@@ -164,6 +164,7 @@ export default function Content() {
             </dd>
           </dl>
         </div>
+        
         {showAlert ? (
           <div className={'relative sticky top-0 z-50 mb-4 rounded border-0 bg-teal-500 px-6 py-4 text-white'}>
             <span className="mr-5 inline-block align-middle text-xl">
