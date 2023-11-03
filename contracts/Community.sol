@@ -80,4 +80,9 @@ contract ArtBlock {
         communities[communityId].ctk.buyToken(numberOfTokens, msg.sender);
     }
 
+    // get all community list
+    function getCommunityList() external view returns (Community[] memory) {
+        return communities;
+    }
+
 }

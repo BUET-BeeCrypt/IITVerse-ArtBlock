@@ -28,9 +28,9 @@ async function deployArtBlock(abxTokenAddress: string) {
 
 
 async function main() {
-  jsonObject.abxTokenContractAddress = await deployABXToken();
+  /* jsonObject.abxTokenContractAddress = await deployABXToken();
   console.log("ABXToken deployed to: https://sepolia.etherscan.io/token/"+jsonObject.abxTokenContractAddress);
-  
+   */
 
   jsonObject.artBlockContractAddress = await deployArtBlock(jsonObject.abxTokenContractAddress);
   console.log("ArtBlock deployed to: https://sepolia.etherscan.io/token/"+jsonObject.artBlockContractAddress);
