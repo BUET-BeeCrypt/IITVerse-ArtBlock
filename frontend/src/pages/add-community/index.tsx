@@ -10,7 +10,7 @@ import {
   useSwitchNetwork,
   useWaitForTransaction,
 } from 'wagmi'
-import { ABXToken__factory } from '../../../typechain'
+import { ABXToken__factory, ArtBlock__factory } from '../../../typechain'
 
 export default function AddCommunity() {
   const [title, setTitle] = useState('')
@@ -27,9 +27,10 @@ export default function AddCommunity() {
   const [txHash, setTxHash] = useState('')
   console.log('contract Address:')
 
-  console.log(contractDetails.abxTokenContractAddress)
+  console.log(contractDetails.artBlockContractAddress)
   console.log('ABI:')
-  console.log(ABXToken__factory.abi)
+  console.log(ArtBlock__factory.abi)
+
   const {
     data: myBalance,
     isRefetching,
@@ -41,6 +42,16 @@ export default function AddCommunity() {
     args: [address],
   })
   console.log(myBalance)
+
+  const { config } = usePrepareContractWrite({
+    address: contractDetails.artBlockContractAddress as `0x${string}`,
+    abi: ArtBlock__factory.abi,
+    functionName: 'createCommunity',
+    args: [title, description],
+  })
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  const { data: receipt, isLoading: isPending } = useWaitForTransaction({ hash: data?.hash })
 
   return address ? (
     <div className="flex h-full flex-1 flex-col items-center justify-between">
@@ -59,7 +70,9 @@ export default function AddCommunity() {
             d="M8.25 7.5l.415-.207a.75.75 0 011.085.67V10.5m0 0h6m-6 0h-1.5m1.5 0v5.438c0 .354.161.697.473.865a3.751 3.751 0 005.452-2.553c.083-.409-.263-.75-.68-.75h-.745M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <span>Current ArtBlock Tokens: {myBalance ? myBalance.toString() : 'Loading...'}</span>
+        <span>
+          Current ArtBlock Tokens: {myBalance || myBalance !== undefined ? myBalance.toString() : 'Loading...'}
+        </span>
       </div>
 
       <div className="mb-4 flex flex-col items-center justify-center">
@@ -92,13 +105,13 @@ export default function AddCommunity() {
                 }}
               ></textarea>
             </div>
-            <div className="card-actions justify-end mt-4">
+            <div className="card-actions mt-4 justify-end">
               <button
                 className={'btn btn-accent btn-outline' + (false ? 'loading-spinner' : '')}
                 disabled={false}
                 onClick={e => {
                   e.preventDefault()
-                  // write()
+                  write()
                 }}
               >
                 Create New
@@ -108,7 +121,17 @@ export default function AddCommunity() {
         </div>
       </div>
       <div className="alert mb-4 border-gray-600 dark:border-gray-400">
-        You will be charged 1 ABX for creating a community.
+        {isSuccess ? (
+          <span>
+            Transaction Hash: {data?.hash} <br />
+            Transaction Link:{' '}
+            <a target="_blank" href={'https://sepolia.etherscan.io/tx/' + data?.hash}>
+              {'https://sepolia.etherscan.io/tx/' + data?.hash}
+            </a>
+          </span>
+        ) : (
+          `You will be charged 2 ABX for creating a community.`
+        )}
       </div>
     </div>
   ) : (
