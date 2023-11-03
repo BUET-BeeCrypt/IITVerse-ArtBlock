@@ -56,6 +56,8 @@ Variable descriptions:
 
 Frontend ENV Variable:
 4. `NEXT_PUBLIC_ALCHEMY_API_KEY` : Same as `RPC_NODE_API_KEY` 
+5. `NEXT_PUBLIC_PINATA_API_KEY` and
+6. `NEXT_PUBLIC_PINATA_SECRET_API_KEY` from [Pinata IPFS](https://www.pinata.cloud/)
 - Compile Contract:
 ```
 npm run compile

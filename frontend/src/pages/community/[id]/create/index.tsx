@@ -1,4 +1,20 @@
+import axios from 'axios'
 import { useRouter } from 'next/router'
+
+async function uploadToIPFS(file: File) {
+  const data = new FormData()
+  data.append('file', file)
+  const resFile = await axios({
+    method: 'post',
+    url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
+    data: data,
+    headers: {
+      'pinata_api_key': process.env.NEXT_PUBLIC_PINATA_API_KEY,
+      'pinata_secret_api_key': process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
 
 export default function () {
   const router = useRouter()

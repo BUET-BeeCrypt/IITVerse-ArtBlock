@@ -1,3 +1,24 @@
+import { useRouter } from 'next/router'
+
 export default function () {
-  return <h1>Hello!</h1>
+  const router = useRouter()
+
+  const community = {
+    id: '1',
+    title: 'ArtBlock',
+    description: 'ArtBlock is a community of artists and developers pushing the boundaries of generative art.',
+  }
+
+  return (
+    <>
+      <div className="flex p-4">
+        <div className="flex-1">
+          <h1 className="text-4xl font-bold">{community.title}</h1>
+        </div>
+        <div className="flex-none">
+          <kbd className="kbd kbd-lg">Pending NFTs</kbd>
+        </div>
+      </div>
+    </>
+  )
 }

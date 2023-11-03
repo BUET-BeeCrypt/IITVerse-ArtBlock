@@ -53,7 +53,7 @@ export default function ArtBlockExchange() {
     abi: ABXToken__factory.abi,
     functionName: 'buyTokens',
     args: [Number.parseInt(currentValue)],
-    value: Number.parseInt(currentValue) * 2,
+    value: Number.parseInt(currentValue),
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
 
