@@ -3,6 +3,9 @@ pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+// import ierc20.sol
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "hardhat/console.sol";
 
 contract ABXToken is ERC20, Ownable {
     uint256 public tokenPriceInWei;  // The fixed price of ABX tokens in Wei
@@ -33,5 +36,12 @@ contract ABXToken is ERC20, Ownable {
     // Function to set the token price (only the owner can update it)
     function setTokenPrice(uint256 newPriceInWei) external onlyOwner {
         tokenPriceInWei = newPriceInWei;
+    }
+
+    // transfer token
+    function transferToken(address _from,address  _to, uint256 _amount) external payable {
+        console.log("transferToken to %s, from %s %d", _to, _from, _amount);
+        console.log("sender balance: %d", balanceOf(_from));
+        _transfer(_from, _to, _amount);
     }
 }
