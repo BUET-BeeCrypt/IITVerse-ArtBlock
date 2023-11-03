@@ -107,4 +107,47 @@ describe("ArtBlock", () => {
       expect(5).to.eq(await artblock.getCommunityToken(0, otherAccounts[1].address))
 
     });
+
+    // test getCommunityList
+  it("should return the community list", async () => {
+    const { token, artblock,otherAccounts } = await loadFixture(deployOnceFixture);
+
+    console.log("\ncommunity list test")
+    console.log("creator: "+otherAccounts[0].address);
+    console.log("member: "+otherAccounts[1].address);
+
+    await token.connect(otherAccounts[0]).buyTokens(5, {
+      value: 10 // Specify the amount of wei to send with the transaction(i.e msg.value)
+    });
+
+    await token.connect(otherAccounts[1]).buyTokens(10, {
+      value: 20 // Specify the amount of wei to send with the transaction(i.e msg.value)
+    });
+
+    // create new community
+    await artblock.connect(otherAccounts[0])
+      .createCommunity(
+        "test community",
+        "test description",
+      );
+
+    console.log("community 1 created");
+
+    // create new community
+    await artblock.connect(otherAccounts[1])
+      .createCommunity(
+        "test community 2",
+        "test description 2",
+      );
+
+    console.log("community 2 created");
+
+    const communityList = await artblock.getCommunityList();
+    expect(communityList.length).to.eq(2);
+
+    for (let i = 0; i < communityList.length; i++) {
+      // print title 
+      console.log("community title: ", communityList[i].title);
+    }
+  });
 });
