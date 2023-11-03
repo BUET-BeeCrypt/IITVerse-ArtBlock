@@ -10,7 +10,7 @@ async function deployOnceFixture() {
   const [owner, ...otherAccounts] = await ethers.getSigners();
 
   const tokenFactory = await ethers.getContractFactory("ABXToken", owner);
-  const token = await tokenFactory.deploy("ABXToken", "ABX", 1000, 2);
+  const token = await tokenFactory.deploy("ABXToken", "ABX", ethers.utils.parseEther("0.05"), 2);
   await token.deployed();
   return { token, owner, otherAccounts };
 }
@@ -18,7 +18,8 @@ async function deployOnceFixture() {
 describe("ABXToken", () => {
   it("should have correct initial supply", async () => {
     const { token } = await loadFixture(deployOnceFixture);
-    expect(await token.totalSupply()).to.eq(ethers.utils.parseEther("1000"));
+    console.log("total token: ", await token.totalSupply());
+    expect(await token.totalSupply()).to.eq(ethers.utils.parseEther("0.05"));
   });
 
   it("should allow to buy tokens", async () => {

@@ -7,8 +7,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract ABXToken is ERC20, Ownable {
     uint256 public tokenPriceInWei;  // The fixed price of ABX tokens in Wei
 
-    constructor(string memory name, string memory symbol, uint256 initialSupply, uint256 priceInWei) ERC20(name, symbol) {
-        _mint(msg.sender, initialSupply * 10 ** uint256(decimals()));
+    constructor(string memory name, string memory symbol, uint256 initialSupplyInWei, uint256 priceInWei) ERC20(name, symbol) {
+        _mint(msg.sender, initialSupplyInWei);
         tokenPriceInWei = priceInWei;
     }
 
