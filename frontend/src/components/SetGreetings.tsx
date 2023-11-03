@@ -12,7 +12,7 @@ export function SetGreetings() {
   const [currentValue, setCurrentValue] = useState('')
 
   const { config } = usePrepareContractWrite({
-    address: contractDetails.adxTokenContractAddress as `0x${string}`,
+    address: contractDetails.abxTokenContractAddress as `0x${string}`,
     abi: ABXToken__factory.abi,
     functionName: "buyTokens",
     args: [Number.parseInt(currentValue)],

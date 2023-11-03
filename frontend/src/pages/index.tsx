@@ -28,11 +28,11 @@ export default function Content() {
   const [txHash, setTxHash] = useState('')
   console.log('contract Address:')
 
-  console.log(contractDetails.adxTokenContractAddress)
+  console.log(contractDetails.abxTokenContractAddress)
   console.log('ABI:')
   console.log(ABXToken__factory.abi)
   const { data, isRefetching, refetch } = useContractRead({
-    address: contractDetails.adxTokenContractAddress as `0x${string}`,
+    address: contractDetails.abxTokenContractAddress as `0x${string}`,
     abi: ABXToken__factory.abi,
     functionName: 'balanceOf',
     args: [address],
@@ -164,7 +164,7 @@ export default function Content() {
             </dd>
           </dl>
         </div>
-        
+
         {showAlert ? (
           <div className={'relative sticky top-0 z-50 mb-4 rounded border-0 bg-teal-500 px-6 py-4 text-white'}>
             <span className="mr-5 inline-block align-middle text-xl">

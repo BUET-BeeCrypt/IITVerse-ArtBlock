@@ -27,7 +27,7 @@ export default function AddCommunity() {
   const [txHash, setTxHash] = useState('')
   console.log('contract Address:')
 
-  console.log(contractDetails.adxTokenContractAddress)
+  console.log(contractDetails.abxTokenContractAddress)
   console.log('ABI:')
   console.log(ABXToken__factory.abi)
   const {
@@ -35,7 +35,7 @@ export default function AddCommunity() {
     isRefetching,
     refetch,
   } = useContractRead({
-    address: contractDetails.adxTokenContractAddress as `0x${string}`,
+    address: contractDetails.abxTokenContractAddress as `0x${string}`,
     abi: ABXToken__factory.abi,
     functionName: 'balanceOf',
     args: [address],
