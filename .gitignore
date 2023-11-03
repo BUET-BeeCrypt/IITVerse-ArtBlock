@@ -14,4 +14,4 @@ artifacts
 
 #For next app
 .next/
-
+package-lock.json
