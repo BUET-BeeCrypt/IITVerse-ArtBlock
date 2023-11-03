@@ -114,6 +114,7 @@ export default function ArtBlockExchange() {
           </div>
         </div>
       </div>
+      
       <div className="alert mb-4">
         {isSuccess ? (
           <span>

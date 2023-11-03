@@ -19,10 +19,12 @@ import { useEffect, useState } from 'react'
 export default function CommunitySales() {
   const router = useRouter()
 
-  const id = BigInt(router.query.id as string) || BigInt(0)
+  console.log('router.query.id: ' + router.query.id)
+  console.log(router)
+  const id = (router.query.id && BigInt(router.query.id as string)) || BigInt(0)
 
   const { data: community } = useContractRead({
-    address: contractDetails.abxTokenContractAddress as `0x${string}`,
+    address: contractDetails.artBlockContractAddress as `0x${string}`,
     abi: ArtBlock__factory.abi,
     functionName: 'getCommunity',
     args: [id],

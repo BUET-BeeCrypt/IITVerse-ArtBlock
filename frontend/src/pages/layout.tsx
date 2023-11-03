@@ -187,7 +187,7 @@ function Sidebar() {
                         (router.pathname == '/community/[id]/create' ? ' bg-gray-100 dark:bg-gray-700' : '')
                       }
                     >
-                      <span className="ml-3">Add NFT</span>
+                      <span className="ml-3">Upload Art</span>
                     </a>
                   </Link>
                 </li>
@@ -199,7 +199,7 @@ function Sidebar() {
                         (router.pathname == '/community/[id]/pending' ? ' bg-gray-100 dark:bg-gray-700' : '')
                       }
                     >
-                      <span className="ml-3">Pending NFTs</span>
+                      <span className="ml-3">Pending Arts</span>
                     </a>
                   </Link>
                 </li>
