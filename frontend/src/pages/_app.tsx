@@ -31,7 +31,7 @@ export default App
 
 // Web3 Configs
 const { chains, publicClient  } = configureChains(
-  [avalanche, goerli, mainnet, optimism, sepolia ],
+  [sepolia ],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }),
     publicProvider(),
