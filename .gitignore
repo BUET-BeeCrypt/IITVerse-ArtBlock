@@ -17,3 +17,4 @@ artifacts
 package-lock.json
 yarn.lock
 frontend/yarn.lock
+.vscode/settings.json

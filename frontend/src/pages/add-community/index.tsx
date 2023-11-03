@@ -12,15 +12,15 @@ import {
 } from 'wagmi'
 import { ABXToken__factory } from '../../../typechain'
 
-export default function ArtBlockExchange() {
+export default function AddCommunity() {
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+
   const { address, isConnected, connector } = useAccount({
     async onConnect({ address, connector, isReconnected }) {
       console.log('Connected', { address, connector, isReconnected })
     },
   })
-
-  const [currentValue, setCurrentValue] = useState('')
-
   console.log('wallet address: ' + address)
 
   const [showAlert, setShowAlert] = useState(false)
@@ -41,23 +41,6 @@ export default function ArtBlockExchange() {
     args: [address],
   })
   console.log(myBalance)
-
-  // const { chain, chains } = useNetwork()
-  // const { isLoading: isNetworkLoading, pendingChainId, switchNetwork } = useSwitchNetwork()
-  // const { data: balance, isLoading: isBalanceLoading } = useBalance({
-  //   address,
-  // })
-
-  const { config } = usePrepareContractWrite({
-    address: contractDetails.adxTokenContractAddress as `0x${string}`,
-    abi: ABXToken__factory.abi,
-    functionName: 'buyTokens',
-    args: [Number.parseInt(currentValue)],
-    value: Number.parseInt(currentValue) * 2,
-  })
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
-
-  const { data: receipt, isLoading: isPending } = useWaitForTransaction({ hash: data?.hash })
 
   return address ? (
     <div className="flex h-full flex-1 flex-col items-center justify-between">
@@ -80,50 +63,52 @@ export default function ArtBlockExchange() {
       </div>
 
       <div className="mb-4 flex flex-col items-center justify-center">
-        <div className="card w-96 bg-base-100 shadow-xl">
+        <div className="card w-[32rem] bg-base-100 shadow-xl">
           <div className="card-body">
-            <h2 className="card-title">Buy ABX</h2>
-            <div className="form-control w-full max-w-xs">
+            <h2 className="card-title text-accent">Add New Community</h2>
+            <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">How much you want to trade?</span>
+                <span className="label-text">Community Title</span>
               </label>
               <input
-                type="number"
-                placeholder="Amount in Ether"
-                className="input input-bordered w-full max-w-xs"
-                value={currentValue}
+                type="text"
+                placeholder="Title"
+                className="input input-bordered w-full"
+                value={title}
                 onChange={e => {
-                  setCurrentValue(e.target.value)
+                  setTitle(e.target.value)
                 }}
               />
+
+              <label className="label">
+                <span className="label-text">Description</span>
+              </label>
+              <textarea
+                className="textarea textarea-bordered w-full"
+                placeholder="Tell us more about the community"
+                value={description}
+                onChange={e => {
+                  setDescription(e.target.value)
+                }}
+              ></textarea>
             </div>
-            <div className="card-actions mt-4 justify-end">
+            <div className="card-actions justify-end mt-4">
               <button
-                className={'btn btn-accent btn-outline' + (isLoading || isPending ? 'loading-spinner' : '')}
-                disabled={isLoading || isPending}
+                className={'btn btn-accent btn-outline' + (false ? 'loading-spinner' : '')}
+                disabled={false}
                 onClick={e => {
                   e.preventDefault()
-                  write()
+                  // write()
                 }}
               >
-                Buy Now
+                Create New
               </button>
             </div>
           </div>
         </div>
       </div>
-      <div className="alert mb-4">
-        {isSuccess ? (
-          <span>
-            Transaction Hash: {data?.hash} <br />
-            Transaction Link:{' '}
-            <a target="_blank" href={'https://sepolia.etherscan.io/tx/' + data?.hash}>
-              Link
-            </a>
-          </span>
-        ) : (
-          <span>Wallet address: {address}</span>
-        )}
+      <div className="alert mb-4 border-gray-600 dark:border-gray-400">
+        You will be charged 1 ABX for creating a community.
       </div>
     </div>
   ) : (
