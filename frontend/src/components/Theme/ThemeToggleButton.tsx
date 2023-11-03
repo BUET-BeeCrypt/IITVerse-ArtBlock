@@ -8,7 +8,11 @@ export default function ThemeToggleButton() {
   const { resolvedTheme, setTheme } = useTheme()
 
   useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    document.querySelector('html').setAttribute('data-theme', resolvedTheme);
+  }, [resolvedTheme]);
   if (!mounted) return null
+
 
   return (
     <button
