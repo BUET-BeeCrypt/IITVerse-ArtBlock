@@ -13,6 +13,9 @@ import { useConnectModal, useAccountModal, useChainModal } from '@rainbow-me/rai
 import { useContractRead } from 'wagmi'
 // import GreeterArtifact from '../../../artifacts/contracts/Greeter.sol/Greeter.json';
 import { ABXToken__factory } from '../../typechain'
+import { use } from 'chai'
+
+
 
 export default function Home() {
   return (
@@ -308,19 +311,6 @@ function Sidebar() {
 }
 
 function Content() {
-  const [showAlert, setShowAlert] = useState(false)
-  const [txHash, setTxHash] = useState('')
-  console.log('contract Address:')
-
-  console.log(contractDetails.contractAddress)
-  console.log('ABI:')
-  console.log(ABXToken__factory.abi)
-  const { data, isRefetching, refetch } = useContractRead({
-    address: contractDetails.adxTokenContractAddress as `0x${string}`,
-    abi: ABXToken__factory.abi,
-    functionName: 'totalSupply',
-  })
-  console.log(data)
 
   const { address, isConnected, connector } = useAccount({
     async onConnect({ address, connector, isReconnected }) {
@@ -328,6 +318,25 @@ function Content() {
     },
   })
 
+  console.log("wallet address: " + address)
+
+
+  const [showAlert, setShowAlert] = useState(false)
+  const [txHash, setTxHash] = useState('')
+  console.log('contract Address:')
+
+  console.log(contractDetails.adxTokenContractAddress)
+  console.log('ABI:')
+  console.log(ABXToken__factory.abi)
+  const { data, isRefetching, refetch } = useContractRead({
+    address: contractDetails.adxTokenContractAddress as `0x${string}`,
+    abi: ABXToken__factory.abi,
+    functionName: 'balanceOf',
+    args:[address],
+  })
+  console.log(data)
+
+  
   const { chain, chains } = useNetwork()
   const { isLoading: isNetworkLoading, pendingChainId, switchNetwork } = useSwitchNetwork()
   const { data: balance, isLoading: isBalanceLoading } = useBalance({
@@ -493,7 +502,7 @@ function Content() {
                 </div>
                 <div className="grid grid-cols-6">
                   <div className="col-span-4 p-4 pr-0 text-lg">
-                    <h4 className="font-bold">Current Greetings:</h4>
+                    <h4 className="font-bold">Current ArtBlock Tokens:</h4>
 
                     <div>
                       <p>{data?.toString()}</p>
