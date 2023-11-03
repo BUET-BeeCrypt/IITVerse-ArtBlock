@@ -33,12 +33,14 @@ export default function () {
     price: number
     isExclusive: boolean
     file: File | null
+    approvalSeconds: number
   }>({
     title: '',
     description: '',
     price: 0,
     isExclusive: false,
     file: null,
+    approvalSeconds: 180,
   })
 
   const [loading, setLoading] = useState(false)
@@ -134,6 +136,20 @@ export default function () {
                 }}
               />
             </div>
+
+            <label className="label">
+              <span className="label-text">Approval Seconds</span>
+            </label>
+            <input
+              type="number"
+              placeholder="Approval Seconds"
+              className="input input-bordered w-full"
+              value={art.approvalSeconds}
+              onChange={e => {
+                setArt(art => ({ ...art, approvalSeconds: parseInt(e.target.value) }))
+              }}
+            />
+
             <div className="card-actions mt-4 justify-end">
               <button
                 className={'btn btn-accent btn-outline '}
