@@ -1,8 +1,6 @@
-'use client'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-export default function CommunitySales() {
+export default function () {
   const router = useRouter()
 
   const community = {
@@ -18,10 +16,9 @@ export default function CommunitySales() {
           <h1 className="text-4xl font-bold">{community.title}</h1>
         </div>
         <div className="flex-none">
-          <kbd className="kbd kbd-lg">Buy NFTs</kbd>
+          <kbd className="kbd kbd-lg">Upload Art</kbd>
         </div>
       </div>
     </>
   )
-  // return <p>Post: {router.query.id}</p>
 }

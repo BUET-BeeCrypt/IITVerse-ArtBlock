@@ -165,6 +165,58 @@ function Sidebar() {
                 <span className="ml-3">Communities</span>
               </a>
             </Link>
+            {router.query.id && (
+              <ul className="ml-3 mt-2 space-y-2 font-medium">
+                <li>
+                  <Link href={`/community/${router.query.id}`}>
+                    <a
+                      className={
+                        'dark:hover:bg-gray-700" group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white hover:dark:bg-gray-700' +
+                        (router.pathname == '/community/[id]' ? ' bg-gray-100 dark:bg-gray-700' : '')
+                      }
+                    >
+                      <span className="ml-3">Buy NFT</span>
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/community/${router.query.id}/create`}>
+                    <a
+                      className={
+                        'dark:hover:bg-gray-700" group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white hover:dark:bg-gray-700' +
+                        (router.pathname == '/community/[id]/create' ? ' bg-gray-100 dark:bg-gray-700' : '')
+                      }
+                    >
+                      <span className="ml-3">Add NFT</span>
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/community/${router.query.id}/pending`}>
+                    <a
+                      className={
+                        'dark:hover:bg-gray-700" group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white hover:dark:bg-gray-700' +
+                        (router.pathname == '/community/[id]/pending' ? ' bg-gray-100 dark:bg-gray-700' : '')
+                      }
+                    >
+                      <span className="ml-3">Pending NFTs</span>
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/community/${router.query.id}/ctk`}>
+                    <a
+                      className={
+                        'dark:hover:bg-gray-700" group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white hover:dark:bg-gray-700' +
+                        (router.pathname == '/community/[id]/ctk' ? ' bg-gray-100 dark:bg-gray-700' : '')
+                      }
+                    >
+                      <span className="ml-3">Token Exchange</span>
+                    </a>
+                  </Link>
+                </li>
+              </ul>
+            )}
           </li>
         </ul>
       </div>
