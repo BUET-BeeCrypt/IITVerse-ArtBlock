@@ -12,7 +12,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useConnectModal, useAccountModal, useChainModal } from '@rainbow-me/rainbowkit'
 import { useContractRead } from 'wagmi'
 // import GreeterArtifact from '../../../artifacts/contracts/Greeter.sol/Greeter.json';
-import { Greeter__factory } from '../../typechain'
+import { ABXToken__factory } from '../../typechain'
 
 export default function Home() {
   return (
@@ -314,11 +314,11 @@ function Content() {
 
   console.log(contractDetails.contractAddress)
   console.log('ABI:')
-  console.log(Greeter__factory.abi)
+  console.log(ABXToken__factory.abi)
   const { data, isRefetching, refetch } = useContractRead({
-    address: contractDetails.contractAddress as `0x${string}`,
-    abi: Greeter__factory.abi,
-    functionName: 'greet',
+    address: contractDetails.adxTokenContractAddress as `0x${string}`,
+    abi: ABXToken__factory.abi,
+    functionName: 'totalSupply',
   })
   console.log(data)
 
