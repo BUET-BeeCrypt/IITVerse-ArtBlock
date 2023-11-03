@@ -45,7 +45,6 @@ describe("ABXToken", () => {
     console.log("total token after buy: ", await token.balanceOf(otherAccounts[0].address));
 
 
-
     // log the blance of otherAccounts[0]
     const blanceAfter = await otherAccounts[0].getBalance();
     console.log("otherAccounts[0] balance after buyTokens: ", blanceAfter);
