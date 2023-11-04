@@ -11,7 +11,7 @@ import { useContractRead } from 'wagmi'
 export default function Communities() {
   const [searchText, setSearchText] = useState('')
 
-  const { data: communities } = useContractRead({
+  const { data: communities }: any = useContractRead({
     address: contractDetails.artBlockContractAddress as `0x${string}`,
     abi: ArtBlock__factory.abi,
     functionName: 'getCommunityList',

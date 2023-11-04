@@ -57,7 +57,7 @@ export default function () {
   console.log(router)
   const id = (router.query.id && BigInt(router.query.id as string)) || BigInt(0)
 
-  const { data: community } = useContractRead({
+  const { data: community }: any = useContractRead({
     address: contractDetails.artBlockContractAddress as `0x${string}`,
     abi: ArtBlock__factory.abi,
     functionName: 'getCommunity',
@@ -73,9 +73,9 @@ export default function () {
     args: [id, art.title, art.description, art.price, art.isExclusive, art.hash, art.approvalSeconds],
   })
 
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  const { data, isLoading, isSuccess, write }: any = useContractWrite(config)
 
-  const { data: receipt, isLoading: isPending } = useWaitForTransaction({ hash: data?.hash })
+  const { data: receipt, isLoading: isPending }: any = useWaitForTransaction({ hash: data?.hash })
 
   return (
     <div className="flex h-full flex-1 flex-col items-center justify-between">

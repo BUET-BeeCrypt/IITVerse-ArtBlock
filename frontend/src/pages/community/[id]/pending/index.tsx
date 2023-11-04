@@ -141,14 +141,14 @@ export default function () {
     }
   }, [voteId, write])
 
-  const { data: community } = useContractRead({
+  const { data: community } : any = useContractRead({
     address: contractDetails.artBlockContractAddress as `0x${string}`,
     abi: ArtBlock__factory.abi,
     functionName: 'getCommunity',
     args: [id],
   })
 
-  const { data: arts } = useContractRead({
+  const { data: arts } : any = useContractRead({
     address: contractDetails.artBlockContractAddress as `0x${string}`,
     abi: ArtBlock__factory.abi,
     functionName: 'getProductList',
