@@ -78,8 +78,8 @@ npx hardhat verify --network sepolia 0xAECD7dFD9d5ED08EA916B052D90A75366B963A61 
 ```
 
 ## Deployed Smart contract on Etherscan
-- [ABXToken - https://sepolia.etherscan.io/token/0x3197e50a9FFE8FFe261C136802e906aA1E1Ed52A](https://sepolia.etherscan.io/token/0x0423386cb8C20fc7cAb942b3d1eC55C11E6f155E)
-- [ArtBlock - https://sepolia.etherscan.io/token/0x3197e50a9FFE8FFe261C136802e906aA1E1Ed52A](https://sepolia.etherscan.io/token/0x0046BDfa00630f7d7684F1eFF873e4f73C58B9ca)
+- [ABXToken - https://sepolia.etherscan.io/token/0x0423386cb8C20fc7cAb942b3d1eC55C11E6f155E](https://sepolia.etherscan.io/token/0x0423386cb8C20fc7cAb942b3d1eC55C11E6f155E)
+- [ArtBlock - https://sepolia.etherscan.io/token/0x0046BDfa00630f7d7684F1eFF873e4f73C58B9ca](https://sepolia.etherscan.io/token/0x0046BDfa00630f7d7684F1eFF873e4f73C58B9ca)
 - [NFTMarketplace - https://sepolia.etherscan.io/token/0x3197e50a9FFE8FFe261C136802e906aA1E1Ed52A](https://sepolia.etherscan.io/token/0x3197e50a9FFE8FFe261C136802e906aA1E1Ed52A)
 
 ## Smart Contracts Docs
