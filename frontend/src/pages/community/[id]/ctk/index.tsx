@@ -16,7 +16,7 @@ export default function () {
   const id = (router.query.id && BigInt(router.query.id as string)) || BigInt(0)
   const [currentValue, setCurrentValue] = useState('')
 
-  const { data: community } = useContractRead({
+  const { data: community }: any = useContractRead({
     address: contractDetails.artBlockContractAddress as `0x${string}`,
     abi: ArtBlock__factory.abi,
     functionName: 'getCommunity',
