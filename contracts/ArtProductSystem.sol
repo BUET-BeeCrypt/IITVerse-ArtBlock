@@ -89,11 +89,11 @@ contract ArtProductSystem {
     }
 
     // verify product
-    function verifyProduct(uint256 productId) public validProductId(productId) {
+    function verifyProduct(uint256 productId) public validProductId(productId) returns( bool ){
 
         ArtProduct storage product = products[productId];
         if(product.isApproved == true) {
-            revert("Product is already approved");
+            return true;
         }
 
         if(product.isApproved == false && (block.timestamp - product.createdAt) > product.votingDuration) {
@@ -108,11 +108,13 @@ contract ArtProductSystem {
                 for(uint256 i=0; i<upvoters[productId].length; i++) {
                     ctkToken.buyToken(1, upvoters[productId][i]);
                 }
+                return true;
             }else{
                 // voting is over and not approved
                 product.staking.unstakeTokensTo(ctkToken, stack_Z, ctkToken.owner());
             }
         }
+        return false;
     }
 
     function getProductList() external view returns (ArtProduct[] memory) {
