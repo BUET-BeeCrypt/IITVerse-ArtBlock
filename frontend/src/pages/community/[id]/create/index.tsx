@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { useContractRead } from 'wagmi'
+import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import contractDetails from '../../../../info/contractDetails.json'
-import { ArtBlock__factory } from '../../../../../typechain'
-import { useState } from 'react'
+import { ArtBlock__factory, ArtProductSystem__factory } from '../../../../../typechain'
+import { useEffect, useState } from 'react'
 import { FileUploader } from 'react-drag-drop-files'
 
 async function uploadToIPFS(file: File) {
@@ -27,12 +27,19 @@ async function uploadToIPFS(file: File) {
 export default function () {
   const router = useRouter()
 
+  const { address, isConnected, connector } = useAccount({
+    async onConnect({ address, connector, isReconnected }) {
+      console.log('Connected', { address, connector, isReconnected })
+    },
+  })
+
   const [art, setArt] = useState<{
     title: string
     description: string
     price: number
     isExclusive: boolean
     file: File | null
+    hash: string
     approvalSeconds: number
   }>({
     title: '',
@@ -40,6 +47,7 @@ export default function () {
     price: 0,
     isExclusive: false,
     file: null,
+    hash: '',
     approvalSeconds: 180,
   })
 
@@ -55,6 +63,19 @@ export default function () {
     functionName: 'getCommunity',
     args: [id],
   })
+
+  console.log('community: ', community)
+
+  const { config } = usePrepareContractWrite({
+    address: contractDetails.artBlockContractAddress as `0x${string}`,
+    abi: ArtBlock__factory.abi,
+    functionName: 'createArtProduct',
+    args: [id, art.title, art.description, art.price, art.isExclusive, art.hash, art.approvalSeconds],
+  })
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+
+  const { data: receipt, isLoading: isPending } = useWaitForTransaction({ hash: data?.hash })
 
   return (
     <div className="flex h-full flex-1 flex-col items-center justify-between">
@@ -117,7 +138,12 @@ export default function () {
                 classes="w-100"
                 label="Upload or drop your document here"
                 handleChange={(file: File) => {
-                  setArt(art => ({ ...art, file }))
+                  setLoading(true)
+                  uploadToIPFS(file as File).then(CID => {
+                    console.log('https://gateway.pinata.cloud/ipfs/' + CID)
+                    setArt(art => ({ ...art, file, hash: CID }))
+                    setLoading(false)
+                  })
                 }}
                 multiple={false}
                 maxFileSize={10000000}
@@ -153,18 +179,13 @@ export default function () {
             <div className="card-actions mt-4 justify-end">
               <button
                 className={'btn btn-accent btn-outline '}
-                disabled={loading}
+                disabled={isLoading || isPending || loading}
                 onClick={e => {
                   e.preventDefault()
                   console.log(art)
                   if (!loading && art.file) {
-                    setLoading(true)
-                    uploadToIPFS(art.file as File).then(CID => {
-                      console.log('https://gateway.pinata.cloud/ipfs/' + CID)
-                      setLoading(false)
-                    })
+                    write()
                   }
-                  // write()
                 }}
               >
                 Create New

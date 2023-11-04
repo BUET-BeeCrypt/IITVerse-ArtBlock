@@ -101,7 +101,7 @@ export default function ArtBlockExchange() {
             </div>
             <div className="card-actions mt-4 justify-end">
               <button
-                className={'btn btn-accent btn-outline' + (isLoading || isPending ? 'loading-spinner' : '')}
+                className={'btn btn-accent btn-outline ' + (isLoading || isPending ? 'loading-spinner' : '')}
                 disabled={isLoading || isPending}
                 onClick={e => {
                   e.preventDefault()
@@ -114,7 +114,7 @@ export default function ArtBlockExchange() {
           </div>
         </div>
       </div>
-      
+
       <div className="alert mb-4">
         {isSuccess ? (
           <span>
