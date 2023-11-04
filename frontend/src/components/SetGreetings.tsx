@@ -2,7 +2,7 @@
 
 import { BaseError } from 'viem'
 import { useContractWrite, useWaitForTransaction, usePrepareContractWrite } from 'wagmi'
-import { Greeter__factory } from '../../typechain'
+import { ABXToken__factory } from '../../typechain'
 import { stringify } from '../utils/stringify'
 
 import contractDetails from '../info/contractDetails.json'
@@ -12,10 +12,11 @@ export function SetGreetings() {
   const [currentValue, setCurrentValue] = useState('')
 
   const { config } = usePrepareContractWrite({
-    address: contractDetails.contractAddress as `0x${string}`,
-    abi: Greeter__factory.abi,
-    functionName: 'setGreeting',
-    args: [currentValue],
+    address: contractDetails.abxTokenContractAddress as `0x${string}`,
+    abi: ABXToken__factory.abi,
+    functionName: "buyTokens",
+    args: [Number.parseInt(currentValue)],
+    value: Number.parseInt(currentValue)*2,
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
 
@@ -31,6 +32,9 @@ export function SetGreetings() {
         className="m-4 flex"
         onSubmit={e => {
           e.preventDefault()
+          console.log('submit', currentValue)
+          console.log('submit', write)
+          console.log('submit', config)
           write()
         }}
       >
@@ -44,7 +48,7 @@ export function SetGreetings() {
           type="submit"
           className="rounded-r-lg border-b border-r  border-t border-yellow-500 bg-yellow-400 p-4 px-8 font-bold uppercase text-gray-800"
         >
-          Set Greet
+          Buy token
         </button>
       </form>
       {isLoading && <div>Check wallet...</div>}

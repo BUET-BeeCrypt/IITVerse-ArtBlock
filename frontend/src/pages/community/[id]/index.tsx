@@ -1,7 +1,22 @@
-import { useRef } from 'react'
+'use client'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-function Art({ art, sell }: { art: any; sell: (id: number, amount: number) => void }) {
-  const priceRef = useRef<HTMLInputElement>(null)
+import contractDetails from '../../../info/contractDetails.json'
+import {
+  useAccount,
+  useBalance,
+  useContractRead,
+  useContractWrite,
+  useNetwork,
+  usePrepareContractWrite,
+  useSwitchNetwork,
+  useWaitForTransaction,
+} from 'wagmi'
+import { ArtBlock__factory } from '../../../../typechain'
+import { useEffect, useState } from 'react'
+
+function Art({ art, buy }: { art: any; buy: (id: number) => void }) {
   return (
     <div className="card card-side bg-base-100 shadow-xl">
       <figure className="h-100 ml-5">
@@ -47,27 +62,35 @@ function Art({ art, sell }: { art: any; sell: (id: number, amount: number) => vo
           <a href={`https://gateway.pinata.cloud/ipfs/${art.hash}`} target="_blank" className="btn btn-primary">
             Preview
           </a>
-          {!art.isExclusive && (
-            <div className="join">
-              <input className="input join-item input-bordered" placeholder="Price" ref={priceRef} type="number" />
-              <button
-                className="btn btn-accent join-item"
-                onClick={e => {
-                  e.preventDefault()
-                  sell(art.id, Number(priceRef.current?.value || '0'))
-                }}
-              >
-                Sell
-              </button>
-            </div>
-          )}
+          <button
+            className="btn btn-accent "
+            onClick={e => {
+              e.preventDefault()
+              buy(art.id)
+            }}
+          >
+            Buy
+          </button>
         </div>
       </div>
     </div>
   )
 }
 
-export default function Content() {
+export default function NFTMarketPlace() {
+  const router = useRouter()
+
+  console.log('router.query.id: ' + router.query.id)
+  console.log(router)
+  const id = (router.query.id && BigInt(router.query.id as string)) || BigInt(0)
+
+  const { data: community } = useContractRead({
+    address: contractDetails.artBlockContractAddress as `0x${string}`,
+    abi: ArtBlock__factory.abi,
+    functionName: 'getCommunity',
+    args: [id],
+  })
+
   const arts = [
     {
       id: 1,
@@ -78,19 +101,23 @@ export default function Content() {
       hash: '0x1234567890',
     },
   ]
+
   return (
     <>
-      <div className="mb-4 flex p-4">
+      <div className="flex p-4">
         <div className="flex-1">
-          <h1 className="text-4xl font-bold">My NFTs</h1>
+          <h1 className="text-4xl font-bold">{community?.title || 'Loading...'}</h1>
+        </div>
+        <div className="flex-none">
+          <kbd className="kbd kbd-lg">Buy NFTs</kbd>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 p-4">
         {arts.map((art, id) => (
           <Art
             art={art}
-            sell={(id, price) => {
-              console.log(id, price)
+            vote={(u, id) => {
+              console.log(u, id)
             }}
             key={id}
           />
@@ -98,4 +125,5 @@ export default function Content() {
       </div>
     </>
   )
+  // return <p>Post: {router.query.id}</p>
 }

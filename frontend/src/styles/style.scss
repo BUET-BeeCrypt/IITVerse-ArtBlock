@@ -4,3 +4,8 @@
 @import 'base';
 @import 'utils';
 @import '@rainbow-me/rainbowkit/styles.css';
+
+label[for='file'] {
+  max-width: 100%;
+  min-width: 0 !important;
+}

@@ -6,7 +6,7 @@ import HeadGlobal from 'components/HeadGlobal'
 // Web3Wrapper deps:
 import { getDefaultWallets, RainbowKitProvider, lightTheme, darkTheme } from '@rainbow-me/rainbowkit'
 import { Chain } from '@rainbow-me/rainbowkit'
-import {  configureChains, WagmiConfig, createConfig } from 'wagmi'
+import { configureChains, WagmiConfig, createConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 
 import { publicProvider } from 'wagmi/providers/public'
@@ -14,6 +14,7 @@ import { avalanche, goerli, mainnet, optimism, sepolia } from 'wagmi/chains'
 import { useTheme } from 'next-themes'
 import { app } from 'appConfig'
 import { useState, useEffect } from 'react'
+import RootLayout from './layout'
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -21,21 +22,19 @@ function App({ Component, pageProps }: AppProps) {
     <ThemeProvider defaultTheme="system" attribute="class">
       <HeadGlobal />
       <Web3Wrapper>
-        <Component key={router.asPath} {...pageProps} />
+        <RootLayout>
+          <Component key={router.asPath} {...pageProps} />
+        </RootLayout>
       </Web3Wrapper>
     </ThemeProvider>
   )
 }
 export default App
 
-
 // Web3 Configs
-const { chains, publicClient  } = configureChains(
-  [avalanche, goerli, mainnet, optimism, sepolia ],
-  [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }),
-    publicProvider(),
-  ]
+const { chains, publicClient } = configureChains(
+  [sepolia],
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }), publicProvider()]
 )
 const { connectors } = getDefaultWallets({ appName: app.name, chains, projectId: app.name })
 const wagmiClient = createConfig({ autoConnect: true, connectors, publicClient })
