@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import contractDetails from '../../../../info/contractDetails.json'
-import { ArtBlock__factory, ArtProductSystem__factory } from '../../../../../typechain'
+import { ArtBlock__factory } from '../../../../../typechain'
 import { useEffect, useState } from 'react'
 import { FileUploader } from 'react-drag-drop-files'
 
