@@ -148,4 +148,9 @@ contract ArtProductSystem {
         }
     }
 
+    // return upvoter list
+    function getUpvoterList(uint256 pid) external view validProductId(pid) returns (address[] memory){
+        return upvoters[pid];
+    }
+
 }

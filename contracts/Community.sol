@@ -1,10 +1,5 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.15;
-
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "hardhat/console.sol";
 import { ABXToken } from "./ABXToken.sol";
 import { CTK } from "./CTK.sol";
 import {ArtProductSystem} from "./ArtProductSystem.sol";
@@ -30,14 +25,12 @@ contract ArtBlock {
         abxToken = ABXToken(_abxToken);
     }
 
-    function createCommunity(string memory title, string memory description) external {
-        console.log(
-            "abxTokenAddress: %s, balance: %s, transfer val: %d",
-            address(msg.sender),
-            abxToken.balanceOf(msg.sender),
-            Y
-        );
+    modifier validCommunityId(uint256 communityId) {
+        require(communityId < communities.length, "invalid community id");
+        _;
+    }
 
+    function createCommunity(string memory title, string memory description) external {
         abxToken.transferToken(msg.sender, address(this), Y);
 
         // create community tokens
@@ -46,7 +39,6 @@ contract ArtBlock {
 
         // create community art product system
         ArtProductSystem artProductSystem = new ArtProductSystem(address(ctk));
-
 
         Community memory community = Community({
             ctk: ctk,
@@ -65,27 +57,18 @@ contract ArtBlock {
     }
 
     // get community
-    function getCommunity(uint256 communityId) external view returns (Community memory) {
-        if( communityId >= communities.length ) {
-            revert("invalid community id");
-        }
-        return communities[communityId];
+    function getCommunity(uint256 cid) external view validCommunityId(cid) returns (Community memory) {
+        return communities[cid];
     }
 
     // get community token by community id and user address
-    function getCommunityToken(uint256 communityId, address user) external view returns (uint256) {
-        if( communityId >= communities.length ) {
-            revert("invalid community id");
-        }
-        return communities[communityId].ctk.balanceOf(user);
+    function getCommunityToken(uint256 cid, address user) external  view validCommunityId(cid) returns (uint256) {
+        return communities[cid].ctk.balanceOf(user);
     }
 
     // buy community token
-    function buyCommunityToken(uint256 communityId, uint256 numberOfTokens) external payable {
-        if( communityId >= communities.length ) {
-            revert("invalid community id");
-        }
-        communities[communityId].ctk.buyToken(numberOfTokens, msg.sender);
+    function buyCommunityToken(uint256 cid, uint256 nTokens) external validCommunityId(cid) payable {
+        communities[cid].ctk.buyToken(nTokens, msg.sender);
     }
 
     // get all community list
@@ -95,61 +78,43 @@ contract ArtBlock {
 
     // create ar product 
     function createArtProduct(
-        uint256 communityId,
+        uint256 cid,
         string memory title, 
         string memory description, 
         uint256 price,
         bool isExclusive,
         string memory _ipfsHash,
         uint256 durationSec
-    ) external {
-        if( communityId >= communities.length ) {
-            revert("invalid community id");
-        }
-        communities[communityId].artProductSystem.createProduct(
+    ) external validCommunityId(cid){
+        
+        communities[cid].artProductSystem.createProduct(
             msg.sender, title, description, price, isExclusive, _ipfsHash, durationSec);
     }
 
     // vote product
-    function voteProduct(uint256 communityId, uint256 productId, bool isUpVote) external {
-        if( communityId >= communities.length ) {
-            revert("invalid community id");
-        }
-        communities[communityId].artProductSystem.voteProduct(msg.sender, productId, isUpVote);
+    function voteProduct(uint256 cid, uint256 productId, bool isUpVote) external validCommunityId(cid){
+        communities[cid].artProductSystem.voteProduct(msg.sender, productId, isUpVote);
     }
 
     // get productList
-    function getProductList(uint256 communityId) external view returns (ArtProductSystem.ArtProduct[] memory){
-        if( communityId >= communities.length ) {
-            revert("invalid community id");
-        }
-        return communities[communityId].artProductSystem.getProductList();
+    function getProductList(uint256 cid) external view validCommunityId(cid) returns (ArtProductSystem.ArtProduct[] memory){
+        return communities[cid].artProductSystem.getProductList();
     }
 
     // get product list by owner
-    function getProductListByOwner(uint256 communityId) external view returns (ArtProductSystem.ArtProduct[] memory){
-        if( communityId >= communities.length ) {
-            revert("invalid community id");
-        }
-        return communities[communityId].artProductSystem.getProductListByOwner(msg.sender);
+    function getProductListByOwner(uint256 cid) external view validCommunityId(cid) returns (ArtProductSystem.ArtProduct[] memory){
+        return communities[cid].artProductSystem.getProductListByOwner(msg.sender);
     }
 
-
     // get product
-    function getProduct(uint256 communityId, uint256 productId) 
-    external view returns(ArtProductSystem.ArtProduct memory){
-        if( communityId >= communities.length ) {
-            revert("invalid community id");
-        }
-        return communities[communityId].artProductSystem.getProduct(productId);
+    function getProduct(uint256 cid, uint256 productId) 
+    external view validCommunityId(cid) returns(ArtProductSystem.ArtProduct memory){
+        return communities[cid].artProductSystem.getProduct(productId);
     }
 
      // get product
-    function verifyProduct(uint256 communityId, uint256 productId) 
-    external {
-        if( communityId >= communities.length ) {
-            revert("invalid community id");
-        }
-        communities[communityId].artProductSystem.verifyProduct(productId);
+    function verifyProduct(uint256 cid, uint256 productId) 
+    external validCommunityId(cid) {
+        communities[cid].artProductSystem.verifyProduct(productId);
     }
 }

@@ -86,6 +86,11 @@ describe("ArtProductTest", () => {
       // check product info
       const artProduct2 = await artblock.getProduct(0, 0);
       console.log("at product: ", artProduct2);
+
+      // check upvoter list 
+      ///const upvoters = await artblock.getUpvoterList(0, 0);
+      //console.log(upvoters)
+     // expect(upvoters.length).to.be.eq(1);
     }
   );
 });
