@@ -1,231 +1,101 @@
-import styles from 'styles/Home.module.scss'
-import contractDetails from '../info/contractDetails.json'
+import { useRef } from 'react'
 
-import ThemeToggleButton from 'components/Theme/ThemeToggleButton'
-import { SetGreetings } from 'components/SetGreetings'
-
-import ThemeToggleList from 'components/Theme/ThemeToggleList'
-import { useState } from 'react'
-import { useNetwork, useSwitchNetwork, useAccount, useBalance } from 'wagmi'
-import ConnectWallet from 'components/Connect/ConnectWallet'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { useConnectModal, useAccountModal, useChainModal } from '@rainbow-me/rainbowkit'
-import { useContractRead } from 'wagmi'
-// import GreeterArtifact from '../../../artifacts/contracts/Greeter.sol/Greeter.json';
-import { ABXToken__factory } from '../../typechain'
-import { use } from 'chai'
-
-export default function Content() {
-  const { address, isConnected, connector } = useAccount({
-    async onConnect({ address, connector, isReconnected }) {
-      console.log('Connected', { address, connector, isReconnected })
-    },
-  })
-
-  console.log('wallet address: ' + address)
-
-  const [showAlert, setShowAlert] = useState(false)
-  const [txHash, setTxHash] = useState('')
-  console.log('contract Address:')
-
-  console.log(contractDetails.abxTokenContractAddress)
-  console.log('ABI:')
-  console.log(ABXToken__factory.abi)
-  const { data, isRefetching, refetch } = useContractRead({
-    address: contractDetails.abxTokenContractAddress as `0x${string}`,
-    abi: ABXToken__factory.abi,
-    functionName: 'balanceOf',
-    args: [address],
-  })
-  console.log(data)
-
-  const { chain, chains } = useNetwork()
-  const { isLoading: isNetworkLoading, pendingChainId, switchNetwork } = useSwitchNetwork()
-  const { data: balance, isLoading: isBalanceLoading } = useBalance({
-    address,
-  })
-
-  const { openConnectModal } = useConnectModal()
-  const { openAccountModal } = useAccountModal()
-  const { openChainModal } = useChainModal()
+function Art({ art, sell }: { art: any; sell: (id: number, amount: number) => void }) {
+  const priceRef = useRef<HTMLInputElement>(null)
   return (
-    <div className="flex flex-1 flex-col">
-      {/* <button
-        data-drawer-target="sidebar-multi-level-sidebar"
-        data-drawer-toggle="sidebar-multi-level-sidebar"
-        aria-controls="sidebar-multi-level-sidebar"
-        type="button"
-        className="mt-2 ml-3 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden"
-      >
-        <span className="sr-only">Open sidebar</span>
-        <svg
-          className="h-6 w-6"
-          aria-hidden="true"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            clipRule="evenodd"
-            fillRule="evenodd"
-            d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-          />
-        </svg>
-      </button> */}
-
-      <div className="p-4 sm:ml-64">
-        <div className="text-center">
-          <p className="font-medium">My DAPP</p>
-        </div>
-
-        <div>
-          <h4 className="text-center text-sm font-medium">demo: ConnectWalletBtn Full</h4>
-          <div className="flex w-full flex-col items-center">
-            <ConnectWallet />
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-center text-sm font-medium">demo: useModal (rainbowkit ^0.4.3)</h4>
-          <div className="flex w-full flex-col items-center">
-            {openConnectModal && (
-              <button
-                onClick={openConnectModal}
-                type="button"
-                className="m-1 rounded-lg bg-orange-500 px-3 py-1 text-white transition-all duration-150 hover:scale-105"
-              >
-                useConnectModal
-              </button>
-            )}
-
-            {openAccountModal && (
-              <button
-                onClick={openAccountModal}
-                type="button"
-                className="m-1 rounded-lg bg-orange-500 px-3 py-1 text-white transition-all duration-150 hover:scale-105"
-              >
-                useAccountModal
-              </button>
-            )}
-
-            {openChainModal && (
-              <button
-                onClick={openChainModal}
-                type="button"
-                className="m-1 rounded-lg bg-orange-500 px-3 py-1 text-white transition-all duration-150 hover:scale-105"
-              >
-                useChainModal
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="w-full max-w-xl rounded-xl bg-sky-500/10 p-6 text-center">
-          <dl className={styles.dl}>
-            <dt>Connector</dt>
-            <dd>
-              {connector?.name}
-              {!address && (
-                <ConnectButton.Custom>
-                  {({ openConnectModal }) => (
-                    <span onClick={openConnectModal} className="cursor-pointer hover:underline">
-                      Not connected, connect wallet
-                    </span>
-                  )}
-                </ConnectButton.Custom>
-              )}
-            </dd>
-            <dt>Connected Network</dt>
-            <dd>{chain ? `${chain?.id}: ${chain?.name}` : 'n/a'}</dd>
-            <dt>Switch Network</dt>
-            <dd className="flex flex-wrap justify-center">
-              {isConnected &&
-                chains.map(x => (
-                  <button
-                    disabled={!switchNetwork || x.id === chain?.id}
-                    key={x.id}
-                    onClick={() => switchNetwork?.(x.id)}
-                    className={
-                      (x.id === chain?.id ? 'bg-green-500' : 'bg-blue-500 hover:scale-105') +
-                      ' m-1 rounded-lg px-3 py-1 text-white transition-all duration-150'
-                    }
-                  >
-                    {x.name}
-                    {isNetworkLoading && pendingChainId === x.id && ' (switching)'}
-                  </button>
-                ))}
-              <ConnectWallet show="disconnected" />
-            </dd>
-            <dt>Account</dt>
-            <dd className="break-all">{address ? `${address}` : 'n/a'}</dd>
-            <dt>Balance</dt>
-            <dd className="break-all">
-              {isBalanceLoading ? 'loading' : balance ? `${balance?.formatted} ${balance?.symbol}` : 'n/a'}
-            </dd>
-          </dl>
-        </div>
-
-        {showAlert ? (
-          <div className={'relative sticky top-0 z-50 mb-4 rounded border-0 bg-teal-500 px-6 py-4 text-white'}>
-            <span className="mr-5 inline-block align-middle text-xl">
-              <i className="fas fa-bell" />
-            </span>
-            <span className="mr-8 inline-block align-middle">
-              <b className="capitalize">Transaction succeded!</b> View on etherscan:
-              <a href={'https://rinkeby.etherscan.io/tx/' + txHash} target="_blank" className="italic underline">
-                {' '}
-                Etherscan Link
-              </a>
-            </span>
-            <button
-              className="absolute right-0 top-0 mr-6 mt-4 bg-transparent text-2xl font-semibold leading-none outline-none focus:outline-none"
-              onClick={() => setShowAlert(false)}
-            >
-              <span>×</span>
-            </button>
-          </div>
-        ) : null}
-        {address && (
-          <div className="w-100 flex min-h-screen items-center justify-center bg-gradient-to-br from-teal-100 via-teal-300 to-teal-500">
-            <div className="relative flex flex-col items-center justify-center">
-              <div
-                id="partnerCard"
-                className="max-w-m flex min-h-[500px] flex-col overflow-hidden rounded-md bg-[#1c1c1c] p-2 text-gray-50"
-              >
-                <div>
-                  <h3 className="pb-4 pl-8 pt-2 text-left text-xl">Greeting App</h3>
-                </div>
-
-                <div className="flex min-h-[200px] items-center justify-center bg-[#2a2a2a]">
-                  <img
-                    src="https://media.istockphoto.com/photos/hand-is-turning-a-dice-and-changes-the-word-meet-to-greet-picture-id1084115310?k=20&m=1084115310&s=612x612&w=0&h=TwrnLk7i0jdfixAxbJdd8_LF9ZOnkvM-1DGn-_VELHA="
-                    alt="EasyCode"
-                    className="w-100 object-cover"
-                  />
-                </div>
-                <div className="grid grid-cols-6">
-                  <div className="col-span-4 p-4 pr-0 text-lg">
-                    <h4 className="font-bold">Current ArtBlock Tokens:</h4>
-
-                    <div>
-                      <p>{data?.toString()}</p>
-                      <button
-                        className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-                        disabled={isRefetching}
-                        onClick={() => refetch()}
-                        style={{ marginLeft: 4 }}
-                      >
-                        {isRefetching ? 'loading...' : 'refetch'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <SetGreetings />
-              </div>
-            </div>
-          </div>
+    <div className="card card-side bg-base-100 shadow-xl">
+      <figure className="h-100 ml-5">
+        {art.isExclusive ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-16 w-16 text-orange-600"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+            />
+          </svg>
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-16 w-16 text-gray-600"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+            />
+          </svg>
         )}
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title">
+          {art.title} <span className="text-accent">{art.isExclusive && 'Exclusive'}</span>
+        </h2>
+        <p>{art.description}</p>
+        <div className="card-actions flex items-center justify-between">
+          <p className="text-left font-bold text-error">{art.price} CTK</p>
+          <a href={`https://gateway.pinata.cloud/ipfs/${art.hash}`} target="_blank" className="btn btn-primary">
+            Preview
+          </a>
+          {!art.isExclusive && (
+            <div className="join">
+              <input className="input join-item input-bordered" placeholder="Price" ref={priceRef} type="number" />
+              <button
+                className="btn btn-accent join-item"
+                onClick={e => {
+                  e.preventDefault()
+                  sell(art.id, Number(priceRef.current?.value || '0'))
+                }}
+              >
+                Sell
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
+  )
+}
+
+export default function Content() {
+  const arts = [
+    {
+      id: 1,
+      title: 'Art Title',
+      description: 'Art Description',
+      price: 10,
+      isExclusive: false,
+      hash: '0x1234567890',
+    },
+  ]
+  return (
+    <>
+      <div className="mb-4 flex p-4">
+        <div className="flex-1">
+          <h1 className="text-4xl font-bold">My NFTs</h1>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-4 p-4">
+        {arts.map((art, id) => (
+          <Art
+            art={art}
+            sell={(id, price) => {
+              console.log(id, price)
+            }}
+            key={id}
+          />
+        ))}
+      </div>
+    </>
   )
 }
