@@ -26,6 +26,13 @@ async function deployArtBlock(abxTokenAddress: string) {
   return artblock.address;
 }
 
+// deploy nftmarketplace
+async function deployNFTMarketplace() {
+  const nftMarketplaceFactory = await ethers.getContractFactory("NFTMarketplace");
+  const nftMarketplace = await nftMarketplaceFactory.deploy();
+  await nftMarketplace.deployed();
+  return nftMarketplace.address;
+}
 
 async function main() {
   /* jsonObject.abxTokenContractAddress = await deployABXToken();
@@ -34,6 +41,9 @@ async function main() {
 
   jsonObject.artBlockContractAddress = await deployArtBlock(jsonObject.abxTokenContractAddress);
   console.log("ArtBlock deployed to: https://sepolia.etherscan.io/token/"+jsonObject.artBlockContractAddress);
+
+  jsonObject.nftMarketplaceContractAddress = await deployNFTMarketplace();
+  console.log("NFTMarketplace deployed to: https://sepolia.etherscan.io/token/"+jsonObject.nftMarketplaceContractAddress);
 
   const updatedJsonData = JSON.stringify(jsonObject, null, 2);
   fs.writeFileSync(contractDetailsDataPath, updatedJsonData, 'utf8');

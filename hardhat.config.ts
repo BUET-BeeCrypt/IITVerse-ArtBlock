@@ -3,6 +3,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-solhint";
 import '@typechain/hardhat'
 import '@nomiclabs/hardhat-ethers';
+import 'solidity-docgen';
 // import '@nomiclabs/hardhat-waffle';
 const dotenv = require('dotenv');
 const path = require('path');
@@ -57,6 +58,8 @@ const getRPCURL = (network: string, RPCNodeProvider: string) => {
 
 
 const config: HardhatUserConfig = {
+  docgen: {
+  },
   defaultNetwork: 'hardhat',
   networks: {
     hardhat: {
