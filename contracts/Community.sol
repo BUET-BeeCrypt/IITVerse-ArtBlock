@@ -7,10 +7,12 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 import { ABXToken } from "./ABXToken.sol";
 import { CTK } from "./CTK.sol";
+import {ArtProductSystem} from "./ArtProductSystem.sol";
 
 contract ArtBlock {
     struct Community {
         CTK ctk;
+        ArtProductSystem artProductSystem;
         address owner;
         string title;
         string description;
@@ -38,11 +40,17 @@ contract ArtBlock {
 
         abxToken.transferToken(msg.sender, address(this), Y);
 
+        // create community tokens
         CTK ctk = new CTK(address(abxToken), 1);
         ctk.createToken(Y);
 
+        // create community art product system
+        ArtProductSystem artProductSystem = new ArtProductSystem(address(ctk));
+
+
         Community memory community = Community({
             ctk: ctk,
+            artProductSystem: artProductSystem,
             owner: msg.sender,
             title: title,
             description: description
@@ -85,4 +93,63 @@ contract ArtBlock {
         return communities;
     }
 
+    // create ar product 
+    function createArtProduct(
+        uint256 communityId,
+        string memory title, 
+        string memory description, 
+        uint256 price,
+        bool isExclusive,
+        string memory _ipfsHash,
+        uint256 durationSec
+    ) external {
+        if( communityId >= communities.length ) {
+            revert("invalid community id");
+        }
+        communities[communityId].artProductSystem.createProduct(
+            msg.sender, title, description, price, isExclusive, _ipfsHash, durationSec);
+    }
+
+    // vote product
+    function voteProduct(uint256 communityId, uint256 productId, bool isUpVote) external {
+        if( communityId >= communities.length ) {
+            revert("invalid community id");
+        }
+        communities[communityId].artProductSystem.voteProduct(msg.sender, productId, isUpVote);
+    }
+
+    // get productList
+    function getProductList(uint256 communityId) external view returns (ArtProductSystem.ArtProduct[] memory){
+        if( communityId >= communities.length ) {
+            revert("invalid community id");
+        }
+        return communities[communityId].artProductSystem.getProductList();
+    }
+
+    // get product list by owner
+    function getProductListByOwner(uint256 communityId) external view returns (ArtProductSystem.ArtProduct[] memory){
+        if( communityId >= communities.length ) {
+            revert("invalid community id");
+        }
+        return communities[communityId].artProductSystem.getProductListByOwner(msg.sender);
+    }
+
+
+    // get product
+    function getProduct(uint256 communityId, uint256 productId) 
+    external view returns(ArtProductSystem.ArtProduct memory){
+        if( communityId >= communities.length ) {
+            revert("invalid community id");
+        }
+        return communities[communityId].artProductSystem.getProduct(productId);
+    }
+
+     // get product
+    function verifyProduct(uint256 communityId, uint256 productId) 
+    external {
+        if( communityId >= communities.length ) {
+            revert("invalid community id");
+        }
+        communities[communityId].artProductSystem.verifyProduct(productId);
+    }
 }

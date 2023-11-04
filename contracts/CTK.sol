@@ -36,4 +36,9 @@ contract CTK is ERC20, Ownable {
         _transfer(address(this), _buyer, numberOfTokens);
         console.log("CTK: transfered %d tokens to %s", numberOfTokens, msg.sender);
     }
+
+    // transfer token
+    function transferCtk(address _from,address  _to, uint256 _amount) external payable {
+        _transfer(_from, _to, _amount);
+    }
 }
