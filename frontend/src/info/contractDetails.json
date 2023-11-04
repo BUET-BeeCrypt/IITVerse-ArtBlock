@@ -1,4 +1,5 @@
 {
   "abxTokenContractAddress": "0x0423386cb8C20fc7cAb942b3d1eC55C11E6f155E",
-  "artBlockContractAddress": "0x0046BDfa00630f7d7684F1eFF873e4f73C58B9ca"
+  "artBlockContractAddress": "0x0046BDfa00630f7d7684F1eFF873e4f73C58B9ca",
+  "nftMarketplaceContractAddress": "0x3197e50a9FFE8FFe261C136802e906aA1E1Ed52A"
 }
