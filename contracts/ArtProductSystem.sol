@@ -25,8 +25,6 @@ contract ArtProductSystem {
         SimpleStaking staking;
     }
 
-
-    address public owner;
     CTK public ctkToken; // Reference to the CTk token contract
     ArtProduct[] public products;
 
@@ -36,14 +34,12 @@ contract ArtProductSystem {
     // map of upvoter for a product
     mapping(uint256 => address[]) public upvoters;
 
-
     constructor(address _ctkToken) {
-        owner = msg.sender;
         ctkToken = CTK(_ctkToken);
     }
 
-    modifier validProductId(uint256 productId) {
-        require(productId < products.length, "Invalid product id");
+    modifier validProductId(uint256 pid) {
+        require(pid < products.length, "invalid pid");
         _;
     }
 
@@ -147,10 +143,4 @@ contract ArtProductSystem {
             product.downVoteScore += ctkToken.balanceOf(voter)+1;
         }
     }
-
-    // return upvoter list
-    function getUpvoterList(uint256 pid) external view validProductId(pid) returns (address[] memory){
-        return upvoters[pid];
-    }
-
 }
